@@ -22,9 +22,39 @@ async function fetchTickets() {
         errorMessage.style.display = "block";
         errorMessage.textContent = error.message;
         console.error("Fetch error:", error);
-    } finally {
+    } 
+    
+    
+
+    finally {
         console.log("Fetch attemot completed.");
     }
 }
 
 fetchTickets();
+
+function displayTickets(ticket) {
+    tickets.forEach((ticket) => {
+        const ticketElement = document.createElement("div");
+        ticketElement.className = "ticket";
+
+        const ticketId = document.createElement("p");
+        ticketId.textContent = 'Ticket ID: ${ticket.id}';
+
+        const customerName = document.createElement("p");
+        customerName.textContent = 'Customer Name: User ${ticket.userId}';
+
+        const issueDescription = document.createElement("p");
+        issueDescription.textContent = 'Issue: ${ticket.title}';
+
+        const details = document.createElement("p");
+        details.textContent = 'Details: ${ticket.body}';
+
+        ticketElement.appenedChild(ticketId);
+        ticketElement.appenedChild(customerName);
+        ticketElement.appenedChild(issueDescription);
+        ticketElement.appenedChild(details);
+
+        ticketContainer.appendChild(ticketElement);
+    });
+}
