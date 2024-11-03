@@ -1,60 +1,56 @@
-//Task 2: Fetch Tickets Using Async/Await and Handle Errors
+//Task 2: Fetch Products from the API Using Fetch and Promises
 
-const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
-const ticketContainer = document.getElementById("ticket-container");
+const apiEndpoint = "https://www.course-api.com/javascript-store-products";
+const productContainer = document.getElementById("product-container");
 const errorMessage = document.getElementById("error-message");
 
-async function fetchTickets() {
-    try {
-        const response = await fetch(apiEndpoint);
-
+fetch(apiEndpoint)
+    .then((response) => {
         if(!response.ok) {
-            throw new Error("Failed to fetch tickets. Please try again later.");
+            throw new Error("Network response was not ok");
         }
-    const tickets = await response.json();
+        return response.json();
+    })
+    .then((data) => {
+        displayProducts(data);
+    })
 
-    if(!tickets.length) {
-        throw new Error("No tickets available.");
-        }
-    
-    displayTickets(tickets);
-    } catch(error) {
+    //Task 4: Handle Errors Gracefully
+
+    .catch((error) => {
         errorMessage.style.display = "block";
-        errorMessage.textContent = error.message;
+        errorMessage.textContent = "Products failed to load, please try again later.";
         console.error("Fetch error:", error);
-    } 
-    
-//Task 4: Use finally to cleanup
-
-    finally {
-        console.log("Fetch attemot completed.");
-    }
-}
-
-fetchTickets();
-
-function displayTickets(ticket) {
-    tickets.forEach((ticket) => {
-        const ticketElement = document.createElement("div");
-        ticketElement.className = "ticket";
-
-        const ticketId = document.createElement("p");
-        ticketId.textContent = 'Ticket ID: ${ticket.id}';
-
-        const customerName = document.createElement("p");
-        customerName.textContent = 'Customer Name: User ${ticket.userId}';
-
-        const issueDescription = document.createElement("p");
-        issueDescription.textContent = 'Issue: ${ticket.title}';
-
-        const details = document.createElement("p");
-        details.textContent = 'Details: ${ticket.body}';
-
-        ticketElement.appenedChild(ticketId);
-        ticketElement.appenedChild(customerName);
-        ticketElement.appenedChild(issueDescription);
-        ticketElement.appenedChild(details);
-
-        ticketContainer.appendChild(ticketElement);
     });
-}
+
+    //Task 3: Display Product Details Dynamically
+
+    function displayProducts(products) {
+        products.forEach((product) => {
+            const { company, price, name} = product.fields;
+            const imgUrl = product.fields.image[0].url;
+
+            const productElement = document.createElement("div");
+            productElement.className = "product";
+
+            const img = document.createElement("img");
+            img.src = imgUrl;
+            img.alt = name; 
+            
+            const companyElement = document.createElement("p");
+            companyElement.textContent = `Company: ${company}`;
+
+            const nameElement = document.createElement("p");
+            nameElement.textContent = `Product: ${name}`;
+
+            const priceElement = document.createElement("p");
+            priceElement.textContent = `Price: $${(price / 100).toFixed(2)}}`;
+
+            productElement.appendChild(img);
+            productElement.appendChild(companyElement);
+            productElement.appendChild(nameElement);
+            productElement.appendChild(priceElement);
+
+            productContainer.appendChild(productElement);
+        });
+    }
