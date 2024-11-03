@@ -24,7 +24,7 @@ async function fetchTickets() {
         console.error("Fetch error:", error);
     } 
     
-    
+//Task 4: Use finally to cleanup
 
     finally {
         console.log("Fetch attemot completed.");
